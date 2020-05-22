@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"gangsterwm.xn--ses554g","root":"/","scheme":"Pisces","version":"8.0.0-rc.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="CentOS7 安装JDK购买云服务器后，厂商会提供公网IP和内网IP ,我们需要使用SSH工具连接到云限务器，随后就能在命令行中操作linux系统 •公网IP : 39.106.228.226 •内网IP : 172.17.208.71  若在本地虚拟机中操作linux ,只需要IP配置静态IP即可">
+  <meta name="description" content="Nginx日志切割-手动现有的日志都会存在access.log 文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过吧这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志德华，则可以按需一每半天或每小时对日志切割一下。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JDK">
-<meta property="og:url" content="http://gangsterwm.网址/2020/03/02/CentOS7%E5%AE%89%E8%A3%85JDK/index.html">
+<meta property="og:title" content="Nginx日志切割">
+<meta property="og:url" content="http://gangsterwm.网址/2020/02/20/Nginx%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2/index.html">
 <meta property="og:site_name" content="你的bug对我打了烊">
-<meta property="og:description" content="CentOS7 安装JDK购买云服务器后，厂商会提供公网IP和内网IP ,我们需要使用SSH工具连接到云限务器，随后就能在命令行中操作linux系统 •公网IP : 39.106.228.226 •内网IP : 172.17.208.71  若在本地虚拟机中操作linux ,只需要IP配置静态IP即可">
+<meta property="og:description" content="Nginx日志切割-手动现有的日志都会存在access.log 文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过吧这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志德华，则可以按需一每半天或每小时对日志切割一下。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-03-02T02:01:35.000Z">
-<meta property="article:modified_time" content="2020-05-18T15:31:36.708Z">
+<meta property="article:published_time" content="2020-02-20T15:20:10.000Z">
+<meta property="article:modified_time" content="2020-05-22T08:21:58.075Z">
 <meta property="article:author" content="居一">
-<meta property="article:tag" content="JDK">
+<meta property="article:tag" content="Nginx">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://gangsterwm.网址/2020/03/02/CentOS7%E5%AE%89%E8%A3%85JDK/">
+<link rel="canonical" href="http://gangsterwm.网址/2020/02/20/Nginx%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>JDK | 你的bug对我打了烊</title>
+  <title>Nginx日志切割 | 你的bug对我打了烊</title>
   
 
 
@@ -197,7 +197,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/03/02/CentOS7%E5%AE%89%E8%A3%85JDK/">
+    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/02/20/Nginx%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/header.jpg">
@@ -210,7 +210,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          JDK
+          Nginx日志切割
         </h1>
 
         <div class="post-meta">
@@ -220,14 +220,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-03-02 10:01:35" itemprop="dateCreated datePublished" datetime="2020-03-02T10:01:35+08:00">2020-03-02</time>
+              <time title="创建时间：2020-02-20 23:20:10" itemprop="dateCreated datePublished" datetime="2020-02-20T23:20:10+08:00">2020-02-20</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-18 23:31:36" itemprop="dateModified" datetime="2020-05-18T23:31:36+08:00">2020-05-18</time>
+                <time title="修改时间：2020-05-22 16:21:58" itemprop="dateModified" datetime="2020-05-22T16:21:58+08:00">2020-05-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,7 +235,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                  <a href="/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
                 </span>
             </span>
 
@@ -245,7 +245,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>929</span>
+              <span>1.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -264,76 +264,50 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="CentOS7-安装JDK"><a href="#CentOS7-安装JDK" class="headerlink" title="CentOS7 安装JDK"></a>CentOS7 安装JDK</h1><p>购买云服务器后，厂商会提供公网IP和内网IP ,我们需要使用SSH工具连接到云限务器，随后就能在命令行中操作linux系统</p>
-<p>•公网IP : 39.106.228.226</p>
-<p>•内网IP : 172.17.208.71</p>
-<blockquote>
-<p>若在本地虚拟机中操作linux ,只需要IP配置静态IP即可</p>
-</blockquote>
+        <h2 id="Nginx日志切割-手动"><a href="#Nginx日志切割-手动" class="headerlink" title="Nginx日志切割-手动"></a>Nginx日志切割-手动</h2><p>现有的日志都会存在access.log 文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过吧这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志德华，则可以按需一每半天或每小时对日志切割一下。</p>
 <a id="more"></a>
 
-<p>服务器安装之前，先确保没有默认安装 JDK ,执行以下命令进行检查：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
-
-<p>如果是自己在虚拟机上安装的CentOS7或CentOS6会默认安装OpenJDK </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@centos7-basic]#</span><span class="bash"> java -version </span></span><br><span class="line"></span><br><span class="line">openjdk version "1.8.0—181"</span><br><span class="line"></span><br><span class="line">OpenJDK Runtime Environment (build 1.8.0_181-bl3) </span><br><span class="line"></span><br><span class="line">OpenJDK 64-Bit Server VM (build 25.181-bl3, mixed mode)</span><br></pre></td></tr></table></figure>
-
-<p>需要卸载，<strong>卸载步骤如下</strong>：</p>
-<ol>
-<li>检查系统安装的OpenJDK</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep openjdk -i</span><br></pre></td></tr></table></figure>
-
+<h4 id="日志切割的具体步骤"><a href="#日志切割的具体步骤" class="headerlink" title="日志切割的具体步骤"></a>日志切割的具体步骤</h4><p>1.创建一个shell可执行文件：cut_my_log.sh，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">LOG_PATH&#x3D;&quot;&#x2F;var&#x2F;log&#x2F;nginx&#x2F;&quot;</span><br><span class="line">RECORD_TIME&#x3D;$(date -d &quot;yesterday&quot; +%Y-%m-%d+%H:%M)</span><br><span class="line">PID&#x3D;&#x2F;var&#x2F;run&#x2F;nginx&#x2F;nginx.pid</span><br><span class="line">mv $&#123;LOG_PATH&#125;&#x2F;access.log $&#123;LOG_PATH&#125;&#x2F;access.$&#123;RECORD_TIME&#125;.log</span><br><span class="line">mv $&#123;LOG_PATH&#125;&#x2F;error.log $&#123;LOG_PATH&#125;&#x2F;error.$&#123;RECORD_TIME&#125;.log</span><br><span class="line"></span><br><span class="line">#向Nginx主进程发送信号，用于重新打开日志文件</span><br><span class="line">kill -USR1 &#96;cat $PID&#96;</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li>删除安装的OpenJDK</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -e —nodeps 需要删除的软件</span><br></pre></td></tr></table></figure>
-
-<p>如果是在阿里云或者腾讯云上的CentOS系统，一般不会自带jdk ,但是以上步骤应该检查一下，如若发现自带JDK ,建议除后重新安装。</p>
-<p><strong>安装步骤如下</strong>：</p>
-<ol>
-<li>新建jdk安装目录</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/java</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>使用ftp工具（FileZilla)上传jdk到某目录，如下：</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/software</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>解压包：</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf JDK压缩包</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>把解压后的jdk放到/usr/java下，这个目录专门用于存放jdk</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv jdk包/ /usr/java/</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>配置环境变量：</li>
+<li>为 cut_my_log.sh添加可执行的权限<br> <code>chmod +x cut_my_log.sh</code></li>
+<li>测试日志切割后的结果<br><code>./cut_my-log.sh</code><h2 id="Nginx日志切割-定时"><a href="#Nginx日志切割-定时" class="headerlink" title="Nginx日志切割-定时"></a>Nginx日志切割-定时</h2><h4 id="使用定时任务"><a href="#使用定时任务" class="headerlink" title="使用定时任务"></a><strong>使用定时任务</strong></h4></li>
+<li>安装定时任务</li>
+<li>crontab -e 编辑并且添加一行新的任务<br><code>*/1**** /usr/local/nginx/sbin/cut_my_log.sh</code> </li>
+<li>重启定时任务：<br><code>service crounf restart</code></li>
 </ol>
 <ul>
-<li>修改profile文件</li>
+<li>常用定时命令：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">service crond start             &#x2F;&#x2F;启动服务</span><br><span class="line">service crond stop              &#x2F;&#x2F;停止服务</span><br><span class="line">service crond restart           &#x2F;&#x2F;重启服务</span><br><span class="line">service crond reload            &#x2F;&#x2F;重新载入配置</span><br><span class="line">crontab -e                          &#x2F;&#x2F;编辑任务</span><br><span class="line">crontab -l                          &#x2F;&#x2F;查看任务列表</span><br></pre></td></tr></table></figure>
+<h3 id="定时任务表达式"><a href="#定时任务表达式" class="headerlink" title="定时任务表达式"></a>定时任务表达式</h3>Cron表达式是，分为5或6个与，每个与代表一个含义<table>
+<thead>
+<tr>
+<th></th>
+<th>分</th>
+<th>时</th>
+<th>日</th>
+<th>月</th>
+<th>星期几</th>
+<th>年（可选）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>取值范围</td>
+<td>0-59</td>
+<td>0-23</td>
+<td>1-31</td>
+<td>1-12</td>
+<td>1-7</td>
+<td>2020</td>
+</tr>
+</tbody></table>
+</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置环境变量</li>
+<h3 id="常用表达式"><a href="#常用表达式" class="headerlink" title="常用表达式"></a>常用表达式</h3><ul>
+<li>分钟执行<br>  */1 * * * *</li>
+<li>每日凌晨（每天晚上23:59）执行<br>59  23 * * *</li>
+<li>每日凌晨1点执行<br>0 1 * * *</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/java/jdk包名</span><br><span class="line">export CLASSPATH=.:%JAVA_HOME%/1ib/dt.jar:%JAVA_HOME%/1ib/tools.jar </span><br><span class="line">export PATH=$PATH:$TAVA_HOME/bin</span><br></pre></td></tr></table></figure>
-
-<p>注：配置在profile文件的最末尾即可</p>
-<ol start="6">
-<li>刷新profile ,使其生效</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-
-<p>再次检查jdk</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
-
-
+<h4 id="Gzip压缩"><a href="#Gzip压缩" class="headerlink" title="Gzip压缩"></a>Gzip压缩</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#开启gzip压缩功能，目的：提高传输效率，节约带宽</span><br><span class="line">gzip  on;</span><br><span class="line">#限制最小压缩，小于1字节的文件就不会压缩了</span><br><span class="line">gzip_min_length 1;</span><br><span class="line">#定义压缩比，文件越大，压缩越多，cpu使用就越大</span><br><span class="line">gzip_comp_level 3;</span><br><span class="line">#定义压缩文件的类型</span><br><span class="line">gzip_types text&#x2F;plain application&#x2F;javascript application&#x2F;x-javascript text&#x2F;css application&#x2F;xml text&#x2F;javascript application&#x2F;x-httpd-php image&#x2F;jpeg image&#x2F;gif image&#x2F;png application&#x2F;json;&#96;</span><br><span class="line">&#96;&#96;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -346,7 +320,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/JDK/" rel="tag"><i class="fa fa-tag"></i> JDK</a>
+              <a href="/tags/Nginx/" rel="tag"><i class="fa fa-tag"></i> Nginx</a>
           </div>
 
         
@@ -355,12 +329,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/20/Nginx%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2/" rel="prev" title="Nginx日志切割">
-      <i class="fa fa-chevron-left"></i> Nginx日志切割
+    <a href="/2020/02/18/Redis/" rel="prev" title="Redis介绍">
+      <i class="fa fa-chevron-left"></i> Redis介绍
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/03/15/%E6%90%AD%E5%BB%BADocker%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" rel="next" title="搭建Docker私有仓库">
-      搭建Docker私有仓库 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/03/02/CentOS7%E5%AE%89%E8%A3%85JDK/" rel="next" title="JDK">
+      JDK <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -420,7 +394,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS7-安装JDK"><span class="nav-number">1.</span> <span class="nav-text">CentOS7 安装JDK</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx日志切割-手动"><span class="nav-number">1.</span> <span class="nav-text">Nginx日志切割-手动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#日志切割的具体步骤"><span class="nav-number">1.0.1.</span> <span class="nav-text">日志切割的具体步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx日志切割-定时"><span class="nav-number">2.</span> <span class="nav-text">Nginx日志切割-定时</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用定时任务"><span class="nav-number">2.0.1.</span> <span class="nav-text">使用定时任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时任务表达式"><span class="nav-number">2.1.</span> <span class="nav-text">定时任务表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用表达式"><span class="nav-number">2.2.</span> <span class="nav-text">常用表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Gzip压缩"><span class="nav-number">2.2.1.</span> <span class="nav-text">Gzip压缩</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
