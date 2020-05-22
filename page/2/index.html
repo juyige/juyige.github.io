@@ -126,17 +126,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">6</span></a>
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">7</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">5</span></a>
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">15</span></a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">18</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -189,6 +189,371 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/02/12/Elasticsearch%E7%B4%A2%E5%BC%95%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="居一">
+      <meta itemprop="description" content="hexo-blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你的bug对我打了烊">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/12/Elasticsearch%E7%B4%A2%E5%BC%95%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">Elasticsearch</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-12 08:01:35" itemprop="dateCreated datePublished" datetime="2020-02-12T08:01:35+08:00">2020-02-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-22 16:33:08" itemprop="dateModified" datetime="2020-05-22T16:33:08+08:00">2020-05-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Elasticsearch/" itemprop="url" rel="index"><span itemprop="name">Elasticsearch</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>索引的一些操作<br>集群健康<br>GET     /_cluster/health</p>
+<p>创建索引<br>PUT     /index_test<br>{<br>    “settings”: {<br>        “index”: {<br>            “number_of_shards”: “2”,<br>            “number_of_replicas”: “0”<br>        }<br>    }<br>}</p>
+<p>查看索引<br>GET     _cat/indices?v</p>
+<p>删除索引<br>DELETE      /index_test</p>
+<p>索引的mappings映射<br>0. 索引分词概念<br>index：默认true，设置为false的话，那么这个字段就不会被索引</p>
+<ol>
+<li>创建索引的同时创建mappings<br>PUT     /index_str<br>{<br> “mappings”: {<pre><code>&quot;properties&quot;: {
+    &quot;realname&quot;: {
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;index&quot;: true
+    },
+    &quot;username&quot;: {
+        &quot;type&quot;: &quot;keyword&quot;,
+        &quot;index&quot;: false
+    }
+}</code></pre> }<br>}</li>
+</ol>
+<p>2.查看分词效果<br>GET         /index_mapping/_analyze<br>{<br>        “field”: “realname”,<br>        “text”: “imooc is good”<br>}</p>
+<ol start="3">
+<li><p>尝试修改<br>POST        /index_str/_mapping<br>{<br> “properties”: {</p>
+<pre><code>&quot;name&quot;: {
+           &quot;type&quot;: &quot;long&quot;
+}</code></pre><p> }<br>}</p>
+</li>
+<li><p>为已存在的索引创建或创建mappings<br>POST        /index_str/_mapping<br>{<br> “properties”: {</p>
+<pre><code>&quot;id&quot;: {
+        &quot;type&quot;: &quot;long&quot;
+},
+&quot;age&quot;: {
+        &quot;type&quot;: &quot;integer&quot;
+},
+&quot;nickname&quot;: {
+    &quot;type&quot;: &quot;keyword&quot;
+},
+&quot;money1&quot;: {
+    &quot;type&quot;: &quot;float&quot;
+},
+&quot;money2&quot;: {
+    &quot;type&quot;: &quot;double&quot;
+},
+&quot;sex&quot;: {
+    &quot;type&quot;: &quot;byte&quot;
+},
+&quot;score&quot;: {
+    &quot;type&quot;: &quot;short&quot;
+},
+&quot;is_teenager&quot;: {
+    &quot;type&quot;: &quot;boolean&quot;
+},
+&quot;birthday&quot;: {
+    &quot;type&quot;: &quot;date&quot;
+},
+&quot;relationship&quot;: {
+    &quot;type&quot;: &quot;object&quot;
+}</code></pre><p> }<br>}</p>
+</li>
+</ol>
+<p>注：某个属性一旦被建立，就不能修改了，但是可以新增额外属性<br>主要数据类型<br>text, keyword, stringlong, integer, short, bytedouble, floatbooleandateobject数组不能混，类型一致<br>字符串<br>text：文字类需要被分词被倒排索引的内容，比如商品名称，商品详情，商品介绍，使用text。keyword：不会被分词，不会被倒排索引，直接匹配搜索，比如订单状态，用户qq，微信号，手机号等，这些精确匹配，无需分词。</p>
+<p>文档的基本操作 - 添加<br>添加文档数据<br>POST /my_doc/_doc/1 -&gt; {索引名}/_doc/{索引ID}（是指索引在es中的id，而不是这条记录的id，比如记录的id从数据库来是1001，并不是这个。如果不写，则自动生成一个字符串。建议和数据id保持一致&gt; ）</p>
+<p>{<br>    “id”: 1001,<br>    “name”: “imooc-1”,<br>    “desc”: “imooc is very good, 慕课网非常牛！”,<br>    “create_date”: “2019-12-24”<br>}</p>
+<p>{<br>    “id”: 1002,<br>    “name”: “imooc-2”,<br>    “desc”: “imooc is fashion, 慕课网非常时尚！”,<br>    “create_date”: “2019-12-25”<br>}</p>
+<p>{<br>    “id”: 1003,<br>    “name”: “imooc-3”,<br>    “desc”: “imooc is niubility, 慕课网很好很强大！”,<br>    “create_date”: “2019-12-26”<br>}</p>
+<p>{<br>    “id”: 1004,<br>    “name”: “imooc-4”,<br>    “desc”: “imooc is good~！”,<br>    “create_date”: “2019-12-27”<br>}</p>
+<p>{<br>    “id”: 1005,<br>    “name”: “imooc-5”,<br>    “desc”: “慕课网 is 强大！”,<br>    “create_date”: “2019-12-28”<br>}</p>
+<p>{<br>    “id”: 1006,<br>    “name”: “imooc-6”,<br>    “desc”: “慕课是一个强大网站！”,<br>    “create_date”: “2019-12-29”<br>}</p>
+<p>{<br>    “id”: 1007,<br>    “name”: “imooc-7”,<br>    “desc”: “慕课网是很牛网站！”,<br>    “create_date”: “2019-12-30”<br>}</p>
+<p>{<br>    “id”: 1008,<br>    “name”: “imooc-8”,<br>    “desc”: “慕课网是很好看！”,<br>    “create_date”: “2019-12-31”<br>}</p>
+<p>{<br>    “id”: 1009,<br>    “name”: “imooc-9”,<br>    “desc”: “在慕课网学习很久！”,<br>    “create_date”: “2020-01-01”<br>}</p>
+<p>注：如果索引没有手动建立mappings，那么当插入文档数据的时候，会根据文档类型自动设置属性类型。这个就是es的动态映射，帮我们在index索引库中去建立数据结构的相关配置信息。“fields”: {“type”: “keyword”}<br>对一个字段设置多种索引模式，使用text类型做全文检索，也可使用keyword类型做聚合和排序“ignore_above” : 256<br>设置字段索引和存储的长度最大值，超过则被忽略</p>
+
+      
+    </div>
+
+    
+    
+    
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------------- 本文结束 <i class="fa fa-heart-o"></i> 感谢您的阅读-------------
+</div>
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/02/08/Elasticsearch%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="居一">
+      <meta itemprop="description" content="hexo-blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你的bug对我打了烊">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/08/Elasticsearch%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">Elasticsearch</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-08 08:01:35" itemprop="dateCreated datePublished" datetime="2020-02-08T08:01:35+08:00">2020-02-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-22 16:31:50" itemprop="dateModified" datetime="2020-05-22T16:31:50+08:00">2020-05-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Elasticsearch/" itemprop="url" rel="index"><span itemprop="name">Elasticsearch</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>943</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>安装Elasticsearch</p>
+<ol>
+<li><p>上传后解压: <code>tar -zxvf elasticsearch-版本</code><br>移动解压后的es文件夹：<code>rm elasticsearch-版本 /usr/local</code></p>
+</li>
+<li><p>ES 目录介绍<br>bin：可执行文件在里面，运行es的命令就在这个里面，包含了一些脚本文件等<br>config：配置文件目录<br>JDK：java环境<br>lib：依赖的jar，类库<br>logs：日志文件<br>modules：es相关的模块<br>plugins：可以自己开发的插件<br>data：这个目录没有，自己新建一下，后面要用 -&gt; mkdir data，这个作为索引目录</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/08/Elasticsearch%E5%AE%89%E8%A3%85/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------------- 本文结束 <i class="fa fa-heart-o"></i> 感谢您的阅读-------------
+</div>
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/02/04/Elasticsearch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="居一">
+      <meta itemprop="description" content="hexo-blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你的bug对我打了烊">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/04/Elasticsearch/" class="post-title-link" itemprop="url">Elasticsearch</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-04 08:01:35" itemprop="dateCreated datePublished" datetime="2020-02-04T08:01:35+08:00">2020-02-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-22 16:30:33" itemprop="dateModified" datetime="2020-05-22T16:30:33+08:00">2020-05-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Elasticsearch/" itemprop="url" rel="index"><span itemprop="name">Elasticsearch</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="分布式搜索引擎ES"><a href="#分布式搜索引擎ES" class="headerlink" title="分布式搜索引擎ES"></a>分布式搜索引擎ES</h2><h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><ol>
+<li><p>Elasticsearch是一个分布式，可扩展，实时的搜索与数据分析引擎。它能从项目一开始就足以让你的数据以搜索，分析和探索的能力，</p>
+</li>
+<li><p>Elasticsearch是一个实时的分布式搜索分析引擎，它可以使您以前所未有的速度和规模，去探索你的数据。Elasticsearch不仅仅只是进行全文搜索，我们就引入结构化搜索，数据分析，复杂的人类语言处理，位置和对象之间的关联关系等。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/04/Elasticsearch/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------------- 本文结束 <i class="fa fa-heart-o"></i> 感谢您的阅读-------------
+</div>
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -798,20 +1163,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -855,12 +1220,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">46k</span>
+    <span title="站点总字数">58k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">42 分钟</span>
+    <span title="站点阅读时长">53 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
