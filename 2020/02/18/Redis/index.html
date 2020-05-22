@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gangsterwm.xn--ses554g","root":"/","scheme":"Pisces","version":"8.0.0-rc.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Redis（分布式缓存中间件）一、简介 Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。——维基百科Redis 是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。它支持多种类型的数据结构，如 字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis介绍">
+<meta property="og:url" content="http://gangsterwm.网址/2020/02/18/Redis/index.html">
+<meta property="og:site_name" content="你的bug对我打了烊">
+<meta property="og:description" content="Redis（分布式缓存中间件）一、简介 Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。——维基百科Redis 是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。它支持多种类型的数据结构，如 字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted se">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-18T15:20:10.000Z">
+<meta property="article:modified_time" content="2020-05-22T08:14:27.691Z">
+<meta property="article:author" content="居一">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gangsterwm.网址/2020/02/18/Redis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis介绍 | 你的bug对我打了烊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+<a href="https://your-url" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你的bug对我打了烊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Saty Hungry，Stay Foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">10</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/02/18/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="居一">
+      <meta itemprop="description" content="hexo-blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你的bug对我打了烊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-18 23:20:10" itemprop="dateCreated datePublished" datetime="2020-02-18T23:20:10+08:00">2020-02-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-22 16:14:27" itemprop="dateModified" datetime="2020-05-22T16:14:27+08:00">2020-05-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Redis（分布式缓存中间件）"><a href="#Redis（分布式缓存中间件）" class="headerlink" title="Redis（分布式缓存中间件）"></a>Redis（分布式缓存中间件）</h2><h4 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h4><blockquote>
+<p>Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。——维基百科<br>Redis 是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。<br>它支持多种类型的数据结构，如 字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted sets） 与范围查询， bitmaps， hyperloglogs 和 地理空间（geospatial） 索引半径查询。 Redis 内置了 复制（replication），LUA脚本（Lua scripting）， LRU驱动事件（LRU eviction），事务（transactions） 和不同级别的 磁盘持久化（persistence）， 并通过 Redis哨兵（Sentinel）和自动 分区（Cluster）提供高可用性（high availability）。——Redis官网</p>
+</blockquote>
+<a id="more"></a>
+
+<h4 id="二、命令"><a href="#二、命令" class="headerlink" title="二、命令"></a>二、命令</h4><h5 id="2-1-键-key-命令"><a href="#2-1-键-key-命令" class="headerlink" title="2.1 键(key) 命令"></a>2.1 键(key) 命令</h5><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Type</td>
+<td>返回 key 所储存的值的类型</td>
+</tr>
+<tr>
+<td>PEXPIREAT</td>
+<td>设置 key 的过期时间亿以毫秒计</td>
+</tr>
+<tr>
+<td>PEXPIREAT</td>
+<td>设置 key 过期时间的时间戳(unix timestamp) 以毫秒计</td>
+</tr>
+<tr>
+<td>Rename</td>
+<td>修改 key 的名称</td>
+</tr>
+<tr>
+<td>PERSIST</td>
+<td>移除 key 的过期时间 key 将持久保持</td>
+</tr>
+<tr>
+<td>Move</td>
+<td>将当前数据库的 key 移动到给定的数据库 db 当中</td>
+</tr>
+<tr>
+<td>RANDOMKEY</td>
+<td>从当前数据库中随机返回一个 key</td>
+</tr>
+<tr>
+<td>Dump</td>
+<td>序列化给定 key， 并返回被序列化的值</td>
+</tr>
+<tr>
+<td>Expire</td>
+<td>为给定 key 设置过期时间</td>
+</tr>
+<tr>
+<td>DEL</td>
+<td>该命令用于在 key 存在时删除 key</td>
+</tr>
+<tr>
+<td>Pttl</td>
+<td>以毫秒为单位返回 key 的剩余的过期时间</td>
+</tr>
+<tr>
+<td>TTL</td>
+<td>以秒为单位，返回给定 key 的剩余生存时间(TTL, time to live)</td>
+</tr>
+<tr>
+<td>Renamenx</td>
+<td>仅当 newkey 不存在时，将 key 改名为 newkey</td>
+</tr>
+<tr>
+<td>EXISTS</td>
+<td>检查给定 key 是否存在</td>
+</tr>
+<tr>
+<td>Expireat</td>
+<td>用于为 key 设置过期时间，接受的时间参数是 UNIX 时间戳(unix timestamp)</td>
+</tr>
+<tr>
+<td>Keys</td>
+<td>查找所有符合给定模式( pattern)的 key</td>
+</tr>
+<tr>
+<td>##### 2.2 字符串(String) 命令</td>
+<td></td>
+</tr>
+<tr>
+<td>命令</td>
+<td>描述</td>
+</tr>
+<tr>
+<td>———–</td>
+<td>————————————————————</td>
+</tr>
+<tr>
+<td>SET</td>
+<td>设置指定 key 的值</td>
+</tr>
+<tr>
+<td>Setnx</td>
+<td>只有在 key 不存在时设置 key 的值</td>
+</tr>
+<tr>
+<td>Setex</td>
+<td>将值 value 关联到 key ，并将 key 的过期时间设为 seconds (以秒为单位)</td>
+</tr>
+<tr>
+<td>Setbit</td>
+<td>对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)</td>
+</tr>
+<tr>
+<td>Setrange</td>
+<td>用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始</td>
+</tr>
+<tr>
+<td>Get</td>
+<td>获取指定 key 的值</td>
+</tr>
+<tr>
+<td>Getbit</td>
+<td>对 key 所储存的字符串值，获取指定偏移量上的位(bit)</td>
+</tr>
+<tr>
+<td>Getrange</td>
+<td>返回 key 中字符串值的子字符</td>
+</tr>
+<tr>
+<td>Getset</td>
+<td>将给定 key 的值设为 value ，并返回 key 的旧值(old value)</td>
+</tr>
+<tr>
+<td>Decr</td>
+<td>将 key 中储存的数字值减一</td>
+</tr>
+<tr>
+<td>Incr</td>
+<td>将 key 中储存的数字值增一</td>
+</tr>
+<tr>
+<td>Decrby</td>
+<td>key 所储存的值减去给定的减量值（decrement）</td>
+</tr>
+<tr>
+<td>Incrby</td>
+<td>将 key 所储存的值加上给定的增量值（increment）</td>
+</tr>
+<tr>
+<td>Incrbyfloat</td>
+<td>将 key 所储存的值加上给定的浮点增量值（increment）</td>
+</tr>
+<tr>
+<td>Strlen</td>
+<td>返回 key 所储存的字符串值的长度</td>
+</tr>
+<tr>
+<td>Mset</td>
+<td>同时设置一个或多个 key-value 对</td>
+</tr>
+<tr>
+<td>Msetnx</td>
+<td>同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在</td>
+</tr>
+<tr>
+<td>Psetex</td>
+<td>这个命令和 SETEX 命令相似，但它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位</td>
+</tr>
+<tr>
+<td>Append</td>
+<td>如果 key 已经存在并且是一个字符串， APPEND 命令将 value 追加到 key 原来的值的末尾</td>
+</tr>
+<tr>
+<td>Mget</td>
+<td>获取所有(一个或多个)给定 key 的值</td>
+</tr>
+</tbody></table>
+<h5 id="2-3-列表-List-命令"><a href="#2-3-列表-List-命令" class="headerlink" title="2.3 列表(List) 命令"></a>2.3 列表(List) 命令</h5><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lpush</td>
+<td>将一个或多个值插入到列表头部</td>
+</tr>
+<tr>
+<td>Lpushx</td>
+<td>将一个或多个值插入到已存在的列表头部</td>
+</tr>
+<tr>
+<td>Lrange</td>
+<td>获取列表指定范围内的元素</td>
+</tr>
+<tr>
+<td>Lpop</td>
+<td>移出并获取列表的第一个元素</td>
+</tr>
+<tr>
+<td>Lindex</td>
+<td>通过索引获取列表中的元素</td>
+</tr>
+<tr>
+<td>Linsert</td>
+<td>在列表的元素前或者(before/after)后插入元素</td>
+</tr>
+<tr>
+<td>Lrem</td>
+<td>移除列表元素</td>
+</tr>
+<tr>
+<td>Llen</td>
+<td>获取列表长度</td>
+</tr>
+<tr>
+<td>Ltrim</td>
+<td>对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除</td>
+</tr>
+<tr>
+<td>Lset</td>
+<td>通过索引设置列表元素的值</td>
+</tr>
+<tr>
+<td>Rpush</td>
+<td>在列表中添加一个或多个值</td>
+</tr>
+<tr>
+<td>Rpushx</td>
+<td>为已存在的列表添加值</td>
+</tr>
+<tr>
+<td>Rpop</td>
+<td>移除并获取列表最后一个元素</td>
+</tr>
+<tr>
+<td>Rpoplpush</td>
+<td>移除列表的最后一个元素，并将该元素添加到另一个列表并返回</td>
+</tr>
+<tr>
+<td>Blpop</td>
+<td>移出并获取列表的第一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止</td>
+</tr>
+<tr>
+<td>Brpop</td>
+<td>移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。</td>
+</tr>
+<tr>
+<td>Brpop</td>
+<td>移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止</td>
+</tr>
+<tr>
+<td>Brpoplpush</td>
+<td>从列表中弹出一个值，将弹出的元素插入到另外一个列表中并返回它； 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止</td>
+</tr>
+</tbody></table>
+<h5 id="2-3-集合-Set-命令"><a href="#2-3-集合-Set-命令" class="headerlink" title="2.3 集合(Set) 命令"></a>2.3 集合(Set) 命令</h5><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sadd</td>
+<td>向集合添加一个或多个成员</td>
+</tr>
+<tr>
+<td>Spop</td>
+<td>移除并返回集合中的一个随机元素</td>
+</tr>
+<tr>
+<td>Scard</td>
+<td>获取集合的成员数</td>
+</tr>
+<tr>
+<td>Srandmember</td>
+<td>返回集合中一个或多个随机数</td>
+</tr>
+<tr>
+<td>Smembers</td>
+<td>返回集合中的所有成员</td>
+</tr>
+<tr>
+<td>Sismember</td>
+<td>判断 member 元素是否是集合 key 的成员</td>
+</tr>
+<tr>
+<td>Srem</td>
+<td>移除集合中一个或多个成员</td>
+</tr>
+<tr>
+<td>Smove</td>
+<td>将 member 元素从 source 集合移动到 destination 集合</td>
+</tr>
+<tr>
+<td>Sinter</td>
+<td>返回给定所有集合的交集</td>
+</tr>
+<tr>
+<td>Sunion</td>
+<td>返回所有给定集合的并集</td>
+</tr>
+<tr>
+<td>Sdiff</td>
+<td>返回所有给定集合的差集</td>
+</tr>
+<tr>
+<td>Sdiffstore</td>
+<td>返回给定所有集合的差集并存储在 destination 中</td>
+</tr>
+<tr>
+<td>Sinterstore</td>
+<td>返回给定所有集合的交集并存储在 destination 中</td>
+</tr>
+<tr>
+<td>Sunionstore</td>
+<td>所有给定集合的并集存储在 destination 集合中</td>
+</tr>
+<tr>
+<td>Sscan</td>
+<td>迭代集合中的元素</td>
+</tr>
+<tr>
+<td>##### 2.4 哈希(Hash) 命令</td>
+<td></td>
+</tr>
+<tr>
+<td>命令</td>
+<td>描述</td>
+</tr>
+<tr>
+<td>————</td>
+<td>—————————————————–</td>
+</tr>
+<tr>
+<td>Hset</td>
+<td>将哈希表 key 中的字段 field 的值设为 value</td>
+</tr>
+<tr>
+<td>Hget</td>
+<td>获取存储在哈希表中指定字段的值</td>
+</tr>
+<tr>
+<td>Hgetall</td>
+<td>获取在哈希表中指定 key 的所有字段和值</td>
+</tr>
+<tr>
+<td>Hmset</td>
+<td>同时将多个 field-value (域-值)对设置到哈希表 key 中</td>
+</tr>
+<tr>
+<td>Hmget</td>
+<td>获取所有给定字段的值</td>
+</tr>
+<tr>
+<td>Hexists</td>
+<td>查看哈希表 key 中，指定的字段是否存在</td>
+</tr>
+<tr>
+<td>Hincrby</td>
+<td>为哈希表 key 中的指定字段的整数值加上增量 increment</td>
+</tr>
+<tr>
+<td>Hincrbyfloat</td>
+<td>为哈希表 key 中的指定字段的浮点数值加上增量 increment</td>
+</tr>
+<tr>
+<td>Hlen</td>
+<td>获取哈希表中字段的数量</td>
+</tr>
+<tr>
+<td>Hkeys</td>
+<td>获取所有哈希表中的字段</td>
+</tr>
+<tr>
+<td>Hvals</td>
+<td>获取哈希表中所有值</td>
+</tr>
+<tr>
+<td>Hdel</td>
+<td>删除一个或多个哈希表字段</td>
+</tr>
+<tr>
+<td>Hsetnx</td>
+<td>只有在字段 field 不存在时，设置哈希表字段的值</td>
+</tr>
+<tr>
+<td>##### 2.5 有序集合(sorted set) 命令</td>
+<td></td>
+</tr>
+<tr>
+<td>命令</td>
+<td>描述</td>
+</tr>
+<tr>
+<td>—————-</td>
+<td>————————————————————</td>
+</tr>
+<tr>
+<td>Zadd</td>
+<td>向有序集合添加一个或多个成员，或者更新已存在成员的分数</td>
+</tr>
+<tr>
+<td>Zrange</td>
+<td>通过索引区间返回有序集合成指定区间内的成员，可以withscores显示分数</td>
+</tr>
+<tr>
+<td>Zrank</td>
+<td>返回有序集合中指定成员的索引</td>
+</tr>
+<tr>
+<td>Zscore</td>
+<td>返回有序集中，成员的分数值</td>
+</tr>
+<tr>
+<td>Zrevrank</td>
+<td>返回有序集合中指定成员的排名，有序集成员按分数值递减(从大到小)排序</td>
+</tr>
+<tr>
+<td>Zlexcount</td>
+<td>在有序集合中计算指定字典区间内成员数量</td>
+</tr>
+<tr>
+<td>Zunionstore</td>
+<td>计算给定的一个或多个有序集的并集，并存储在新的 key 中</td>
+</tr>
+<tr>
+<td>Zremrangebyrank</td>
+<td>移除有序集合中给定的排名区间的所有成员</td>
+</tr>
+<tr>
+<td>Zcard</td>
+<td>获取有序集合的成员数</td>
+</tr>
+<tr>
+<td>Zrem</td>
+<td>移除有序集合中的一个或多个成员</td>
+</tr>
+<tr>
+<td>Zinterstore</td>
+<td>计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合 key 中</td>
+</tr>
+<tr>
+<td>Zincrby</td>
+<td>有序集合中对指定成员的分数加上增量 incrementRedis Zrangebyscore 命令通过分数返回有序集合指定区间内的成员</td>
+</tr>
+<tr>
+<td>Zrangebylex</td>
+<td>通过字典区间返回有序集合的成员</td>
+</tr>
+<tr>
+<td>Zremrangebyscore</td>
+<td>移除有序集合中给定的分数区间的所有成员</td>
+</tr>
+<tr>
+<td>Zscan</td>
+<td>迭代有序集合中的元素（包括元素成员和元素分值）</td>
+</tr>
+<tr>
+<td>Zrevrangebyscore</td>
+<td>返回有序集中指定分数区间内的成员，分数从高到低排序</td>
+</tr>
+<tr>
+<td>Zremrangebylex</td>
+<td>移除有序集合中给定的字典区间的所有成员</td>
+</tr>
+<tr>
+<td>Zrevrange</td>
+<td>返回有序集中指定区间内的成员，通过索引，分数从高到底</td>
+</tr>
+<tr>
+<td>Zcount</td>
+<td>计算在有序集合中指定区间分数的成员数</td>
+</tr>
+</tbody></table>
+<h5 id="2-6-连接命令"><a href="#2-6-连接命令" class="headerlink" title="2.6 连接命令"></a>2.6 连接命令</h5><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Echo</td>
+<td>打印字符串</td>
+</tr>
+<tr>
+<td>Select</td>
+<td>切换到指定的数据库</td>
+</tr>
+<tr>
+<td>Ping</td>
+<td>查看服务是否运行</td>
+</tr>
+<tr>
+<td>Quit</td>
+<td>关闭当前连接</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>验证密码是否正确</td>
+</tr>
+</tbody></table>
+<p> 阻塞与非阻塞</p>
+<ul>
+<li><p>阻塞：一对一</p>
+</li>
+<li><p>非阻塞：</p>
+<h2 id="整合SpringBoot"><a href="#整合SpringBoot" class="headerlink" title="整合SpringBoot"></a>整合SpringBoot</h2></li>
+</ul>
+<ol>
+<li>引入redis依赖<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;depandency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/depandency&gt;</span><br></pre></td></tr></table></figure></li>
+<li>配置redis</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">    redis:</span><br><span class="line">        database: 1 #要是用的redis库，0-15任选其一</span><br><span class="line">        host: 192.168.1.10  #redis存在的主机</span><br><span class="line">        port: <span class="number">6379</span></span><br><span class="line">        password: <span class="number">123456</span></span><br></pre></td></tr></table></figure>
+<h2 id="发布与订阅"><a href="#发布与订阅" class="headerlink" title="发布与订阅"></a>发布与订阅</h2><ul>
+<li>订阅<br>  subscribe 频道</li>
+<li>发布<br>  publish 频道 消息<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2></li>
+</ul>
+<ol>
+<li><p><strong>RDB</strong> - Redis DataBase </p>
+<ul>
+<li>RDB持久性按指定的时间间隔执行数据集的时间点<strong>快照</strong></li>
+<li>优势<ol>
+<li>RDB是Redis数据的非常紧凑的<strong>单文件</strong>时间点表示。RDB文件非常适合备份。例如，您可能希望在最近的24小时内每小时存档一次RDB文件，并在30天之内每天保存一次RDB快照。这使您可以在发生灾难时轻松还原数据集的不同版本。RDB对于灾难恢复非常有用，它是一个紧凑的文件，可以传输到远程数据中心或Amazon S3（可能已加密）上。</li>
+<li>RDB最大限度地提高了Redis的性能，因为Redis父进程为了持久化所需要做的唯一工作就是fork一个子进程.子进程在备份时,父实例将永远不会执行磁盘I / O或类似操作。</li>
+<li>与AOF相比，RDB允许大型数据集更快地重启。<ul>
+<li>劣势</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><strong>最后一次备份后的数据容易丢失</strong>。如果您需要在Redis停止工作（例如断电后）的情况下最大程度地减少数据丢失的机会，则RDB不好。您可以在生成RDB的位置配置不同的保存点（例如，在至少五分钟之后，对数据集进行100次写入，但是您可以有多个保存点）。但是，通常会每隔五分钟或更长时间创建一次RDB快照，因此，如果Redis出于任何原因在没有正确关闭的情况下停止工作，则应该准备丢失最新的数据。</li>
+<li>RDB需要经常使用fork（）才能使用子进程将其持久化在磁盘上。如果数据集很大，Fork（）可能很耗时，并且如果数据集很大且CPU性能不佳，则可能导致Redis停止为客户端服务几毫秒甚至一秒钟。AOF还需要fork（），但您可以调整要重写日志的频率，而无需在持久性上进行权衡。</li>
+</ul>
+</li>
+<li>配置</li>
+</ul>
+</li>
+<li><p><strong>AOF</strong> - Append Only File</p>
+</li>
+</ol>
+<ul>
+<li>AOF持久性会记录服务器接收的每个写入操作，这些操作将在服务器启动时再次播放，以重建原始数据集。使用与Redis协议本身相同的格式记录命令，并且仅采用<strong>追加方式</strong>。当日志太大时，Redis可以在<strong>后台重写日志</strong>。</li>
+<li>优势<ul>
+<li>使用AOF Redis更加持久：您可以有不同的fsync策略：完全没有fsync，<strong>每秒fsync</strong>，每个查询fsync。使用默认策略fsync时，每秒的写入性能仍然很好（fsync是使用后台线程执行的，并且在没有进行fsync的情况下，主线程将尽力执行写入操作。）但是您只能损失一秒钟的写入时间。</li>
+<li>AOF日志仅是一个<strong>追加日志</strong>，因此，如果断电，也不会出现寻道或损坏问题。即使由于某种原因（磁盘已满或其他原因）以半写命令结束日志，redis-check-aof工具也可以轻松修复它。</li>
+<li>Redis太大时，Redis可以在后台<strong>自动重写AOF</strong>。重写是完全安全的，因为Redis继续追加到旧文件时，会生成一个全新的文件，其中包含创建当前数据集所需的最少操作集，一旦准备好第二个文件，Redis会切换这两个文件并开始追加到新的那一个。</li>
+<li>AOF以易于理解和解析的格式包含所有操作的日志。您甚至可以轻松导出AOF文件。例如，即使您使用FLUSHALL命令刷新了所有错误文件，如果在此期间未执行任何日志重写操作，您仍然可以保存数据集，只是停止服务器，删除最新命令（FLUSHALL）并重新启动Redis。</li>
+<li>劣势<ul>
+<li>对于相同的数据集，<strong>AOF文件通常大于等效的RDB文件</strong>。</li>
+<li>根据确切的fsync策略，AOF可能比RDB慢。通常，在将fsync设置为每秒的情况下，性能仍然很高，并且在禁用fsync的情况下，即使在高负载下，它也应与RDB一样快。即使在巨大的写负载情况下，RDB仍然能够提供有关最大延迟的更多保证。</li>
+<li>过去，我们在特定命令中遇到过罕见的错误（例如，其中一个涉及阻止命令，例如BRPOPLPUSH），导致生成的AOF在重载时无法重现完全相同的数据集。这些错误很少见，我们在测试套件中进行了测试，自动创建了随机的复杂数据集，然后重新加载它们以检查一切是否正常。但是，RDB持久性几乎是不可能的。更明确地说：Redis AOF通过增量更新现有状态来工作，就像MySQL或MongoDB一样，而RDB快照一次又一次地创建所有内容，从概念上讲更健壮。但是-1）请注意，每次Redis重写AOF时，都会从数据集中包含的实际数据开始重新创建AOF，与始终附加AOF文件（或重写为读取旧AOF而不是读取内存中的数据）相比，提高了对错误的抵抗力。2）我们从未收到过有关真实环境中检测到的AOF损坏的用户报告。<h4 id="缓存过期机制"><a href="#缓存过期机制" class="headerlink" title="缓存过期机制"></a>缓存过期机制</h4></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>定期删除（主动）hz 10  -  每秒检测十次</li>
+<li>惰性删除（被动）缓存被访问时才进行删除（前提缓存已经过期）<h4 id="内存淘汰管理机制（Memory-Management）"><a href="#内存淘汰管理机制（Memory-Management）" class="headerlink" title="内存淘汰管理机制（Memory Management）"></a>内存淘汰管理机制（Memory Management）</h4></li>
+<li>memory </li>
+<li>当内存达到阈值进行缓存删除</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------------- 本文结束 <i class="fa fa-heart-o"></i> 感谢您的阅读-------------
+</div>
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"><i class="fa fa-tag"></i> Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/15/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="prev" title="Docker常用命令">
+      <i class="fa fa-chevron-left"></i> Docker常用命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/02/CentOS7%E5%AE%89%E8%A3%85JDK/" rel="next" title="JDK">
+      JDK <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis（分布式缓存中间件）"><span class="nav-number">1.</span> <span class="nav-text">Redis（分布式缓存中间件）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、简介"><span class="nav-number">1.0.1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、命令"><span class="nav-number">1.0.2.</span> <span class="nav-text">二、命令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-键-key-命令"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">2.1 键(key) 命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-列表-List-命令"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">2.3 列表(List) 命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-集合-Set-命令"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">2.3 集合(Set) 命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6-连接命令"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">2.6 连接命令</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整合SpringBoot"><span class="nav-number">2.</span> <span class="nav-text">整合SpringBoot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布与订阅"><span class="nav-number">3.</span> <span class="nav-text">发布与订阅</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis持久化"><span class="nav-number">4.</span> <span class="nav-text">Redis持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存过期机制"><span class="nav-number">4.0.1.</span> <span class="nav-text">缓存过期机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存淘汰管理机制（Memory-Management）"><span class="nav-number">4.0.2.</span> <span class="nav-text">内存淘汰管理机制（Memory Management）</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="居一"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">居一</p>
+  <div class="site-description" itemprop="description">hexo-blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1169591471" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1169591471" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1169591471@qq.com" title="E-Mail → mailto:1169591471@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">居一</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">34k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">31 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gangsterwm.xn--ses554g","root":"/","scheme":"Pisces","version":"8.0.0-rc.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="主从复制一、搭建一主二从　　redis主从其实是读写分离，主（master）节点写数据，从（slave）节点读数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis搭建一主二从">
+<meta property="og:url" content="http://gangsterwm.网址/2020/05/18/Redis%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E/index.html">
+<meta property="og:site_name" content="你的bug对我打了烊">
+<meta property="og:description" content="主从复制一、搭建一主二从　　redis主从其实是读写分离，主（master）节点写数据，从（slave）节点读数据。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="en-resource://database/667:2">
+<meta property="og:image" content="en-resource://database/669:2">
+<meta property="og:image" content="en-resource://database/667:2">
+<meta property="og:image" content="en-resource://database/669:2">
+<meta property="article:published_time" content="2020-05-18T15:20:10.000Z">
+<meta property="article:modified_time" content="2020-05-22T08:14:30.881Z">
+<meta property="article:author" content="居一">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="en-resource://database/667:2">
+
+<link rel="canonical" href="http://gangsterwm.网址/2020/05/18/Redis%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis搭建一主二从 | 你的bug对我打了烊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+<a href="https://your-url" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你的bug对我打了烊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Saty Hungry，Stay Foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档<span class="badge">10</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://gangsterwm.网址/2020/05/18/Redis%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="居一">
+      <meta itemprop="description" content="hexo-blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你的bug对我打了烊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis搭建一主二从
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-18 23:20:10" itemprop="dateCreated datePublished" datetime="2020-05-18T23:20:10+08:00">2020-05-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-22 16:14:30" itemprop="dateModified" datetime="2020-05-22T16:14:30+08:00">2020-05-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><h4 id="一、搭建一主二从"><a href="#一、搭建一主二从" class="headerlink" title="一、搭建一主二从　　"></a>一、搭建一主二从　　</h4><p>redis主从其实是<strong>读写分离</strong>，主（master）节点写数据，从（slave）节点读数据。　　</p>
+<a id="more"></a>
+
+<ol>
+<li>准备三台redis机器。redis的密码需要一致，否则主从切换时会有问题。　　</li>
+<li>选择两台，作为从机，编辑redis核心配置文件。<br>vim /usr/local/redis/redis.config　　</li>
+<li>修改配置(从机)<ul>
+<li>#主节点ip和端口<br>replicaof &lt;master-ip&gt; &lt;master-port&gt;</li>
+<li>#主节点redis密码<br>masterauth &lt;master-password&gt;</li>
+<li>#从节点只读<br>replica-read-only yes　　</li>
+</ul>
+</li>
+<li>删除工作空间之前的rdb和aof文件，工作空间位置在安装redis时是自己定义的，我的是/usr/local/redis/working　　</li>
+<li>重启<ul>
+<li>redis/etc/init.d/redis_init_script stop</li>
+<li>/etc/init.d/redis_init_script start　　</li>
+</ul>
+</li>
+<li>进入/usr/local/redis/working，发现rdb和aof又出现了，这个是同步的主节点的。　　</li>
+<li>启动redis客户端，查看从节点状态，如图第一张从节点，第二张主节点redis-cli -a &lt;password&gt;info replication<img src="en-resource://database/667:2" alt="3f572e97e85e28a76419c6db5debb3ae.png"><br>&nbsp; &nbsp; &nbsp;&nbsp;<img src="en-resource://database/669:2" alt="21b8899e49703ef427b218bceaa6343e.png"></li>
+<li>测试读写数据有没有问题　　</li>
+<li>至此，一主二从搭建完成，但是还有一个问题，主节点挂掉之后从节点不会自动选举出新的主节点，下边我们加入哨兵，解决这个问题&nbsp;</li>
+</ol>
+<p><strong>无磁盘化复制</strong></p>
+<h4 id="二、哨兵（Sentinel）"><a href="#二、哨兵（Sentinel）" class="headerlink" title="二、哨兵（Sentinel）　　"></a>二、哨兵（Sentinel）　　</h4><p>1、进入/usr/local/redis，创建并且配置sentinel.conf（从redis解压保重复制）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span>-mode no</span><br><span class="line"> port <span class="number">26379</span></span><br><span class="line"> daemonize yes</span><br><span class="line"> pidfile /<span class="keyword">var</span>/run/redis-sentinel.pid</span><br><span class="line"> logfile /usr/local/sentinel/redis-sentinel.log</span><br><span class="line"> dir /usr/local/redis/sentinel</span><br><span class="line"> #配置哨兵 nymaster-昵称 192.168.1.10-主机ip 2-哨兵数量</span><br><span class="line"> sentinel monitor mymaster <span class="number">192.168</span><span class="number">.1</span><span class="number">.10</span> <span class="number">6379</span> <span class="number">2</span> </span><br><span class="line"> #密码</span><br><span class="line"> #sentinel auth-pass &amp;lt;master-name&amp;gt; &amp;lt;password&amp;gt; </span><br><span class="line"> sentinel auth-pass mymaster <span class="number">123456</span></span><br><span class="line"> #master被sentinel认定为失效的间隔时间（毫秒）</span><br><span class="line"> sentinel down-after-milliseconds mymaster <span class="number">30000</span> </span><br><span class="line"> #剩余的slaves重新和新的master做同步的并行个数 </span><br><span class="line"> sentinel parallel-syncs mymaster <span class="number">1</span> </span><br><span class="line"> #主备切换的超时时间，哨兵要去做故障转移，这个时候哨兵也是一个进程，如果他没有去执行，超过这个时间后，会由其他的哨兵来处理</span><br><span class="line"> sentinel failover-timeout mymaster <span class="number">180000</span></span><br></pre></td></tr></table></figure>
+<p>2、启动3台哨兵<br>redis-sentinel sentinel.conf　　<br>3、测试master挂了，看slave是否成为mastermaster恢复，观察slave状态　　<br>4、结论　　　　<br>master挂了以后，由于哨兵监控，剩余slave会进行选举，选举后其中一个成为master，当原来的master恢复后，他会成为slave;　　<br>5、补充：　　　　<br>当主节点挂掉，变为从节点后，查看这台redis的信息（info replication）,发现master_link_status:down。表示同步有问题。这是因为之前主节点没有配置masterauth &lt;master-password&gt;属性，他作为主节点时用不到这个，所以当时没问题，当作为从节点，因为没有主节点的密码，所以就同步不了数据了。</p>
+<h4 id="哨兵相关信息查看"><a href="#哨兵相关信息查看" class="headerlink" title="哨兵相关信息查看"></a>哨兵相关信息查看</h4><ul>
+<li>查看master节点信息<br>  sentinel master mymaster</li>
+<li>查看slaves节点信息<br>  sentinel slaves mymaster</li>
+<li>查看哨兵节点信息<br>  sentinel sentinels mymaster<br>之前安装了redis，但是单节点redis不可靠，现在搭建redis主从，提高可用性。<h4 id="一、搭建一主二从-redis主从其实是读写分离，主节点写数据，从节点读数据。"><a href="#一、搭建一主二从-redis主从其实是读写分离，主节点写数据，从节点读数据。" class="headerlink" title="一、搭建一主二从　　redis主从其实是读写分离，主节点写数据，从节点读数据。　　"></a>一、搭建一主二从　　redis主从其实是读写分离，主节点写数据，从节点读数据。　　</h4>1、准备三台redis机器。redis的密码需要一致，否则主从切换时会有问题。　　<br>2、选择两台，作为从机，编辑redis核心配置文件。<br>vim /usr/local/redis/redis.config　　<br>3、修改配置(从机)#主节点ip和端口replicaof &lt;master-ip&gt; &lt;master-port&gt;#主节点redis密码masterauth &lt;master-password&gt;replica-read-only yes　　<br>4、删除工作空间之前的rdb和aof文件，工作空间位置在安装redis时是自己定义的，我的是/usr/local/redis/working　　<br>5、重启redis/etc/init.d/redis_init_script stop<br>/etc/init.d/redis_init_script start　　<br>6、进入/usr/local/redis/working，发现rdb和aof又出现了，这个是同步的主节点的。　　<br>7、启动redis客户端，查看从节点状态，如图第一张从节点，第二张主节点redis-cli -a &lt;password&gt;info replication<br><img src="en-resource://database/667:2" alt="3f572e97e85e28a76419c6db5debb3ae.png"><br>&nbsp; &nbsp; &nbsp;&nbsp;<img src="en-resource://database/669:2" alt="21b8899e49703ef427b218bceaa6343e.png"><br>8、测试读写数据有没有问题　　<br>9、至此，一主二从搭建完成，但是还有一个问题，主节点挂掉之后从节点不会自动选举出新的主节点，下边我们加入哨兵，解决这个问题&nbsp;<h4 id="二、哨兵（三台redis都要做如下配置）"><a href="#二、哨兵（三台redis都要做如下配置）" class="headerlink" title="二、哨兵（三台redis都要做如下配置）　　"></a>二、哨兵（三台redis都要做如下配置）　　</h4>1、进入/usr/local/redis，创建并且配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sentinel.conf![51e409b11aa51c150090697429a953ed.gif](en-resource:&#x2F;&#x2F;database&#x2F;671:0)</span><br><span class="line">  port 26379 pidfile &quot;&#x2F;usr&#x2F;local&#x2F;redis&#x2F;sentinel&#x2F;redis-sentinel.pid&quot; dir &quot;&#x2F;usr&#x2F;local&#x2F;redis&#x2F;sentinel&quot; daemonize yes protected-mode no logfile &quot;&#x2F;usr&#x2F;local&#x2F;redis&#x2F;sentinel&#x2F;redis-sentinel.log&quot;# 配置哨兵 sentinel monitor mymaster 127.0.0.1 6379 </span><br><span class="line">2 # 密码 sentinel auth-pass &lt;master-name&gt; &lt;password&gt; # master被sentinel认定为失效的间隔时间 sentinel down-after-milliseconds mymaster 30000 # 剩余的slaves重新和新的master做同步的并行个数 sentinel parallel-syncs mymaster </span><br><span class="line">1 # 主备切换的超时时间，哨兵要去做故障转移，这个时候哨兵也是一个进程，如果他没有去执行，超过这个时间后，会由其他的哨兵来处理 sentinel failover-timeout mymaster 180000</span><br></pre></td></tr></table></figure>
+2、启动3台哨兵<br> <code>redis-sentinel sentinel.conf</code><br>3、测试<ol>
+<li>master挂了，看slave是否成为master</li>
+<li>master恢复，观察slave状态　　<br>4、结论　　　　<br>master挂了以后，由于哨兵监控，剩余slave会进行选举，选举后其中一个成为master，当原来的master恢复后，他会成为slave。&nbsp;　　<br>5、补充：　　　　<br>当主节点挂掉，变为从节点后，查看这台redis的信息（info replication）,发现master_link_status:down。表示同步有问题。这是因为之前主节点没有配置masterauth &lt;master-password&gt;属性，他作为主节点时用不到这个，所以当时没问题，当作为从节点，因为没有主节点的密码，所以就同步不了数据了。</li>
+</ol>
+</li>
+</ul>
+<h3 id="redis集群"><a href="#redis集群" class="headerlink" title="redis集群"></a>redis集群</h3><h4 id="三主三从"><a href="#三主三从" class="headerlink" title="三主三从"></a>三主三从</h4><p>redis.conf配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#开启集群模式</span><br><span class="line">cluster-enabled yes</span><br><span class="line">#每一个节点需要有一个配置文件，需要六分。每个节点处于集群中的角色都要告知其他节点，彼此知道，这个文件用于存储集群模式下的集群状态信息。</span><br><span class="line">有redis自己维护</span><br><span class="line">clusteer-config-file nodes.conf</span><br><span class="line">#超时时间，超时则认为master宕机，最后进行主备切换</span><br><span class="line">cluster-node-timeout 15000</span><br><span class="line">#开启AOF</span><br><span class="line">appendonly yes</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+------------- 本文结束 <i class="fa fa-heart-o"></i> 感谢您的阅读-------------
+</div>
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"><i class="fa fa-tag"></i> Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/18/Redis%E5%AE%89%E8%A3%85/" rel="prev" title="Redis安装">
+      <i class="fa fa-chevron-left"></i> Redis安装
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#主从复制"><span class="nav-number">1.</span> <span class="nav-text">主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、搭建一主二从"><span class="nav-number">1.0.1.</span> <span class="nav-text">一、搭建一主二从　　</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、哨兵（Sentinel）"><span class="nav-number">1.0.2.</span> <span class="nav-text">二、哨兵（Sentinel）　　</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#哨兵相关信息查看"><span class="nav-number">1.0.3.</span> <span class="nav-text">哨兵相关信息查看</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、搭建一主二从-redis主从其实是读写分离，主节点写数据，从节点读数据。"><span class="nav-number">1.0.4.</span> <span class="nav-text">一、搭建一主二从　　redis主从其实是读写分离，主节点写数据，从节点读数据。　　</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、哨兵（三台redis都要做如下配置）"><span class="nav-number">1.0.5.</span> <span class="nav-text">二、哨兵（三台redis都要做如下配置）　　</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis集群"><span class="nav-number">1.1.</span> <span class="nav-text">redis集群</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#三主三从"><span class="nav-number">1.1.1.</span> <span class="nav-text">三主三从</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="居一"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">居一</p>
+  <div class="site-description" itemprop="description">hexo-blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1169591471" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1169591471" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1169591471@qq.com" title="E-Mail → mailto:1169591471@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">居一</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">34k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">31 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
